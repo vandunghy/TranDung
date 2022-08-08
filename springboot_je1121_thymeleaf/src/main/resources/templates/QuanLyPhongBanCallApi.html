@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin Phòng ban - API</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            layDanhSachPhongBan();
+        });
+
+        function layDanhSachPhongBan() {
+            //Lấy danh sách người dùng
+            $.ajax({
+                type: "GET",
+                url: "/api/phongban/all",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (result) { //Khi lấy được dữ liệu
+
+                    var thongtin = "";
+                    //Duyệt từng dòng lấy được
+                    $.each(result, function (index, phongBan) {
+                        thongtin += "<tr>";
+                        thongtin += "<td>" + phongBan.maPhong + "</td>";
+                        thongtin += "<td>" + phongBan.tenPhong + "</td>";
+
+                        var sua = "suaThongTin('" + phongBan.maPhong + "')";
+                        var xoa = "xoaThongTin('" + phongBan.maPhong + "')";
+                        thongtin += "<td><a data-toggle=\"modal\" data-target=\"#modalPhongBan\" href='#' onclick=\"" + sua + "\" title='Sửa Phòng Ban'>Sửa</a>&nbsp;";
+                        thongtin += "<a href='#' data-toggle=\"modal\" data-target=\"#modalXoa\" title='Xóa phòng ban' onclick=\"" + xoa + "\">Xóa</a></td>";
+                        thongtin += "</tr>";
+                    });
+
+                    $("#dsPhongBan").append(thongtin);
+                }
+            });
+        };
+
+        function hienThiThemMoi()
+        {
+            $("#modalTitle").text("Thêm mới thông tin Phòng ban");
+            $("#hMaPhong").val("");
+            $("#tenPhong").val("");
+            $("#hMaPhong").focus();
+        }
+        function themMoiHoacCapNhat() {
+            //alert("Hello");
+            let form = $("#modalPhongBan").validate({
+                rules: {
+                    maPhong: "required",
+                    tenPhong: "required",
+                },
+                messages: {
+                    maPhong: "Bạn cần phải nhập mã phòng",
+                    tenPhong: "Bạn cần phải nhập tên phòng",
+                },
+                submitHandler: function () {
+                    if(form.valid()) {
+                        xuLyThemMoi();
+                    }
+                }
+
+            });
+        }
+
+        function xuLyThemMoi() {
+            //Lấy thông tin trên giao diện
+            var maPhong = $("#hMaPhong").val();
+
+
+            var urlPost = '/api/phongban/add';
+            var methodType = "POST";
+            //TH sửa
+            if (maPhong > 0) {
+                urlPost = '/api/phongban/' + maPhong;
+                methodType = "PUT";
+            }
+            var maPhong = $("#maPhong").val();
+            var tenPhong = $("#tenPhong").val();
+
+
+            //Khai báo mảng
+
+            console.log("mã phòng: " + maPhong);
+            console.log("tên phòng: " + tenPhong);
+
+            var formData = {}
+            formData["maPhong"] = maPhong;
+            formData["tenPhong"] = tenPhong;
+
+
+
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.maPhong != null) {
+                        $("#modalPhongBan").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        /*
+         * Hàm sửa thông tin phòng ban theo id
+         */
+        function suaThongTin(maPhong) {
+            //Lấy thông tin chi tiết của phòng ban cần sửa
+            thongTinChiTiet(maPhong);
+        }
+
+        /*
+        * Hàm hiển thị thông tin chi tiết phòng ban bằng jquery ajax
+        */
+        function thongTinChiTiet(maPhong) {
+            $.ajax({
+                type: "GET",
+                url: "/api/phongban/" + maPhong,
+                data: {
+                    id: maPhong
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data) {
+                    //Hiển thị lên giao diện
+                    $("#modalTitle").text("Sửa thông tin người dùng");
+                    $("#maPhong").val(data.maPhong);
+                    $("#tenPhong").val(data.tenPhong);
+
+                }});
+        }
+
+        function xoaThongTin(maPhong) {
+
+            $("#maPhong").val(maPhong);
+        };
+
+        function thucHienXoa() {
+            var maPhong = $("#maPhong").val();
+            $.ajax({
+                url: '/api/phongban/' + maPhong,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div layout:fragment="content" name="content">
+    <div style="text-align: center; width: 100%">
+        <h2>Danh sách Phòng ban</h2>
+    </div>
+    <div style="width: 100%; text-align: right;">
+        <a href="#" onclick="hienThiThemMoi()" class="btn btn-primary" data-toggle="modal" data-target="#modalPhongBan">Thêm mới</a>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Mã phòng</th>
+            <th>Tên phòng</th>
+        </tr>
+        </thead>
+        <tbody id="dsPhongBan">
+        </tbody>
+    </table>
+    <!--Thiết kế giao diện nhân viên dạng modal-->
+    <form id="modalPhongBan" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        Thêm mới Phòng ban</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Mã Phòng:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" id="maPhong" name="maPhong" class="form-control"
+                                       placeholder="Nhập mã phòng"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Tên phòng:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" id="tenPhong" name="tenPhong" class="form-control"
+                                       placeholder="Nhập tên phòng"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="themMoiHoacCapNhat()" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Form modal hỏi xoá người dùng-->
+    <fieldset id="modalXoa"  class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Thông báo xoá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="title-delete">
+
+                        <h3>Bạn có chắc chắn muốn xoá thông tin này không ?  </h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="thucHienXoa()" class="btn btn-primary">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+</body>
+</html>

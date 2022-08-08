@@ -1,0 +1,64 @@
+*{padding:0; margin:0;}
+ul {list-style:none;}
+.clear {clear:both;}
+h1, h2, h3, h4 {font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;}
+
+html {display:block; height:100%; width:100%; background:url(images/htmlbg.jpg) repeat;}
+body {background:url(images/topbg.jpg) left top repeat-x; font: 12px Verdana, Geneva, sans-serif; color:#808080;}
+#wrap { width:930px; padding:15px; background:#fefefd; margin:auto;}
+#topbanner {width:960px; margin:0 auto 0 auto; height:90px;}
+#header {background:url(images/mainheaderbg.jpg) left bottom repeat-x; height:254px; margin-bottom:3px; position:relative;}
+#menu {background:url(images/menubg.jpg) left top repeat-x; height:46px;}
+#slider { width:930px; overflow:hidden; height:254px; position:relative;}
+			.container {height:254px; overflow:hidden;  cursor:pointer; }
+		ul.slides { display:block; list-style:none; padding:0; margin:0; position:relative; width:930px; height:254px;}
+		ul.slides li {display:none; padding:0; margin:0; position:absolute; left:0; top:0; overflow:hidden; width:930px; height:254px;}
+ul.slides li .thumbholder {height:254px; width:625px; float:left; position:relative;}
+ul.slides li .txtholder { width:250px; float:right; padding-right:20px;}
+#slider .pagination {
+	display:block;
+	list-style:none;
+	position:absolute;
+	right:14px;
+	top:215px;
+	z-index:999;
+	width:260px;
+	text-align:center;
+}
+ ul.pagination li {display:inline;}
+
+ ul.pagination li a { display:block; float:left; width:19px; height:19px; margin:3px; background:url(images/slidernav.png) no-repeat; text-indent:-9000px;}
+ ul.pagination li.active a {background:url(images/slidernav-active.png) no-repeat!important; text-indent:-9000px;}
+#slider .container  h2 {display:block; font:normal 30px Georgia, "Times New Roman", Times, serif; color:#6e595a; padding-top:30px; margin-bottom:15px;}
+#slider .container p {display:block; font:normal 16px Georgia, "Times New Roman", Times, serif; color:#6e595a; line-height:22px;}
+h1#sitename {display:block; float:left; font:bold 34px "Trebuchet MS", Arial, Helvetica, sans-serif; color:#fff; padding:20px 10px 0 0; text-shadow:#54494a 1px 1px 1px;}
+h1#sitename span {display:block; font:bold 12px "Trebuchet MS", Arial, Helvetica, sans-serif; color:#fff; text-shadow:none!important;}
+
+#menu li {display:inline; font:bold 18px "Trebuchet MS", Arial, Helvetica, sans-serif;}
+#menu li a {display:block; float:left; color:#957f80; height:38px; padding:8px 22px 0 20px; background:url(images/menua-normal.jpg) right 3px no-repeat; text-decoration:none; text-shadow:#fff 1px 1px 1px; }
+#menu li a:active, #menu li a:visited {color:#957f80; text-decoration:none;}
+#menu li a:hover, #menu li.active a {background:url(images/menuactive.gif) center top no-repeat; color:#fff; text-shadow:#5e494a 1px 1px 1px;}
+#submenu {padding:5px; border-bottom:solid 1px #957f80;  border-top:solid 1px #957f80; height:17px;}
+#submenu li {display:inline; font:normal 12px Verdana, Geneva, sans-serif;}
+#submenu li a {display:block; color:#666; padding:0 15px 0 15px; border-right:solid 1px #ccc; float:left; text-decoration:none;}
+#submenu li.last a { border:none!important;}
+#submenu li a:hover {color:#222;}
+#content {background:url(images/sidebarbg.gif) left top repeat-y; padding-top:15px;}
+#sidebar1 {float:left; width:250px; position:relative;}
+#maincontent {float:right; width:660px; position:relative;}
+#sidebar1 .hotimg {width:250px; margin:auto; position:relative; padding-top:5px; margin-bottom:10px;}
+
+#sidebar1 .subhead {display:block; background:url(images/sidebarh2bg.png) no-repeat; height:30px; padding:7px 0 0 15px; margin-left:-15px; color:#fff; margin-bottom:10px;}
+.menu li {display:block; font:normal 14px Georgia, "Times New Roman", Times, serif; height:28px;}
+.menu {margin-bottom:10px; margin-right:10px;}
+.menu li a {display:block; height:22px; padding:4px 5px 0 25px; color:#6a5758; border-bottom:dashed 1px #6a5758; text-decoration:none; background:url(images/menublt.png) 3px 5px no-repeat;}
+
+#maincontent h2 {display:block; font:bold 18px "Trebuchet MS", Arial, Helvetica, sans-serif; color:#333; margin-bottom:10px;}
+#maincontent p {margin-bottom:15px;}
+
+img.leftalign, img.rightalign {padding:8px; border:solid 1px #ddd; background:#eee; display:block;}
+.leftalign {float:left; margin-right:10px;}
+.rightalign {float:right; margin-left:10px;}
+#footer {background:url(images/topbg.jpg) repeat-x; padding:35px; text-align:center; color:#fff;}
+#footer a { color:#fff; text-decoration:none;}
+.credit {font-size:10px; display:block;}

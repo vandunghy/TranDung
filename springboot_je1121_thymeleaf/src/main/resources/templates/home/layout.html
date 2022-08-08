@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE"></title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/templatemo_style.css}"/>
+</head>
+<body>
+<!-- Templates from www.stanford.com.vn -->
+<div id="templatemo_container">
+    <!-- Menu -->
+    <div th:replace="home/menu :: menu"/>
+    <!-- End menu -->
+
+    <div id="templatemo_header">
+        <div th:replace="home/header :: header"/>
+    </div> <!-- end of header -->
+
+    <div id="templatemo_content">
+
+        <div id="templatemo_content_left">
+            <div th:replace="home/nav :: nav"/>
+        </div> <!-- end of content left -->
+
+        <div id="templatemo_content_right">
+            <section layout:fragment="content">
+            </section>
+            <a href="subpage.html"><img th:src="@{'/images/templatemo_ads.jpg'}" alt="ads" /></a>
+        </div> <!-- end of content right -->
+
+        <div class="cleaner_with_height">&nbsp;</div>
+    </div> <!-- end of content -->
+
+    <!-- Footer -->
+    <div layout:replace="home/footer :: footer"/>
+    <!-- end of footer -->
+</div> <!-- end of container -->
+<div align=center>This template  downloaded form <a href='https://stanford.com.vn'>Stanford.com.vn</a></div>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body th:fragment="slider">
+<div class="container">
+    <div class="row">
+        <div class="social-link">
+            <p>Theo dõi: </p>
+            <a href="#"><i class="ion-social-facebook"></i></a>
+            <a href="#"><i class="ion-social-twitter"></i></a>
+            <a href="#"><i class="ion-social-googleplus"></i></a>
+            <a href="#"><i class="ion-social-youtube"></i></a>
+        </div>
+        <div  class="slick-multiItemSlider">
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image/bg1.jpg}" alt="" width="285" height="437"></a>
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image/bg7.jpg}" alt="" width="285" height="437"></a>
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image/bg3.jpg}" alt="" width="285" height="437"></a>
+                </div>
+
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image//bg4.jpg}" alt="" width="285" height="437"></a>
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image/bg5.jpg}" alt="" width="285" height="437"></a>
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <a href="#"><img th:src="@{image/bg6.jpg}" alt="" width="285" height="437"></a>
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <img th:src="@{image/bg2.jpg}" alt="" width="285" height="437">
+                </div>
+            </div>
+            <div class="movie-item">
+                <div class="mv-img">
+                    <img th:src="@{image/bg8.jpg}" alt="" width="285" height="437">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

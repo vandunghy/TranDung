@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới hoặc sửa thông tin sách</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body layout:fragment="content">
+<form action="#" method="post" th:action="@{/themMoiChuDe}" th:object="${chude}" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Nhập thông tin chủ đề</legend>
+        <table>
+            <tr>
+                <td>
+                    Mã chủ đề:
+                </td>
+                <td>
+                    <input type="text" th:field="*{maChuDe}"/>
+                    <input type="hidden" name="userId" th:value="${chude.maChuDe}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tên chủ đề:
+                </td>
+                <td>
+                    <input type="text" th:field="*{tenChuDe}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="submit" name="btnCapNhat" value="Cập nhật"/>
+                    &nbsp;
+                    <a th:href="@{/quanly-chude}">Trở về</a>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+</body>
+</html>

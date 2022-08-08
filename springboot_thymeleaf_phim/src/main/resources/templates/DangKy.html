@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{login/sign-up}">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <form action="#" method="post" th:action="@{/thucHienDangKy}" th:object="${user}" enctype="multipart/form-data">
+        <div class="input-group input-group-outline my-3">
+            <div class="col-md-12">
+                <input type="text" autocomplete="on" class="form-control"
+                       placeholder="Họ & tên" th:field="*{hoTen}"/>
+            </div>
+        </div>
+        <div class="input-group input-group-outline mb-3">
+            <div class="col-md-12">
+                <input type="text" class="form-control"
+                       placeholder="Tên đăng nhập" th:field="*{tenDangNhap}"/>
+            </div>
+        </div>
+        <div class="input-group input-group-outline mb-3">
+            <div class="col-md-12">
+                <input type="password" class="form-control"
+                       placeholder="Mật khẩu" th:field="*{matKhau}"/>
+            </div>
+        </div>
+        <div class="input-group input-group-outline mb-3">
+            <div class="col-md-12">
+                <input type="text" autocomplete="on" class="form-control"
+                       placeholder="Điện thoại" th:field="*{dienThoai}"/>
+            </div>
+        </div>
+        <div class="input-group input-group-outline mb-3">
+            <div class="col-md-12">
+                <input type="text" autocomplete="on" class="form-control"
+                       placeholder="Email" th:field="*{email}"/>
+            </div>
+        </div>
+        <div class="input-group input-group-outline mb-3">
+            <div class="col-md-12">
+                <input type="text" autocomplete="on" class="form-control"
+                       placeholder="Địa chỉ" th:field="*{diaChi}"/>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" name="btnDangKy" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Đăng ký</button>
+        </div>
+        <div class="col-md-12">
+            <span class="alert" th:text="${thongBao}"></span>
+        </div>
+    </form>
+</div>
+</body>
+</html>

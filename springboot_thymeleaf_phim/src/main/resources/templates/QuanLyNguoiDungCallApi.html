@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin người dùng - API</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#ngayTao").datepicker(
+                {
+                    dateFormat: 'yy-mm-dd'
+                }
+            );
+        })
+
+    </script>
+    <script type="text/javascript">
+        function hienThiThemMoi()
+        {
+            $("#modalTitle").text("Thêm mới thông tin người dùng");
+            $("#hUserId").val("");
+            $("#tenDangNhap").val("");
+            $("#matKhau").val("");
+            $("#hoTen").val("");
+            $("#dienThoai").val("");
+            $("#email").val("");
+            $("#diaChi").val("");
+            $("#ngayTao").val("");
+            $("#vaiTro").val("");
+            $("#tenDangNhap").focus();
+        }
+        function themMoiHoacCapNhat() {
+            //alert("Hello");
+            let form = $("#modalNguoiDung").validate({
+                rules: {
+                    tenDangNhap: "required",
+                    hoTen: "required",
+                    matKhau: {
+                        required: true,
+                        minlength: 2
+                    }
+                },
+                messages: {
+                    tenDangNhap: "Bạn cần phải nhập tên đăng nhập",
+                    hoTen: "Bạn cần phải nhập họ tên",
+                    matKhau: {
+                        required: "Bạn cần phải nhập mật khẩu đăng nhập",
+                        minlength: "Bạn cần nhập mật khẩu từ 2 kí tự trở lên"
+                    }
+                },
+                submitHandler: function () {
+                    if(form.valid()) {
+                        xuLyThemMoi();
+                    }
+                }
+
+            });
+        }
+
+        function xuLyThemMoi() {
+            //Lấy thông tin trên giao diện
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId);
+
+            var urlPost = '/api/user/add';
+            var methodType = "POST";
+            //TH sửa
+            if (userId > 0) {
+                urlPost = '/api/user/' + userId;
+                methodType = "PUT";
+            }
+
+            var tenDN = $("#tenDangNhap").val();
+            var matKhau = $("#matKhau").val();
+            var ten = $("#hoTen").val();
+            var dt = $("#dienThoai").val();
+            var email = $("#email").val();
+            var diaChi = $("#diaChi").val();
+            var ngayTao = $("#ngayTao").val();
+            var vaiTro = $("#vaiTro").val();
+
+            //Khai báo mảng
+            var formData = {}
+            formData["tenDangNhap"] = tenDN;
+            formData["matKhau"] = matKhau;
+            formData["hoTen"] = ten;
+            formData["dienThoai"] = dt;
+            formData["email"] = email;
+            formData["diaChi"] = diaChi;
+            formData["ngayTao"] = ngayTao;
+            formData["vaiTro"] = vaiTro;
+
+            console.log("Tên đăng nhập: " + tenDN);
+            console.log("Mật khẩu: " + matKhau);
+            console.log("Họ tên: " + ten);
+            console.log("Điện thoại: " + dt);
+            console.log("Email: " + email);
+            console.log("Địa chỉ: " + diaChi);
+            console.log("Ngày Tạo: " + ngayTao);
+            console.log("Vai trò: " + vaiTro);
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.id != null) {
+                        $("#modalNguoiDung").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        /*
+         * Hàm sửa thông tin người dùng theo id
+         */
+        function suaThongTin(userId) {
+            //Lấy thông tin chi tiết của người dùng cần sửa
+            thongTinChiTiet(userId);
+        }
+
+        /*
+        * Hàm hiển thị thông tin chi tiết người dùng bằng jquery ajax
+        */
+        function thongTinChiTiet(userId) {
+            $.ajax({
+                type: "GET",
+                url: "/api/user/" + userId,
+                data: {
+                    id: userId
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data) {
+                    //Hiển thị lên giao diện
+                    $("#modalTitle").text("Sửa thông tin người dùng");
+                    $("#hUserId").val(data.id);
+                    $("#tenDangNhap").val(data.tenDangNhap);
+                    $("#matKhau").val(data.matKhau);
+                    $("#hoTen").val(data.hoTen);
+                    $("#dienThoai").val(data.dienThoai);
+                    $("#email").val(data.email);
+                    $("#diaChi").val(data.diaChi);
+                    $("#ngayTao").val(data.ngayTao);
+                    $("#vaiTro").val(data.vaiTro);
+                }});
+        }
+
+        function xoaThongTin(userId) {
+
+            $("#hUserId").val(userId);
+        };
+
+        function thucHienXoa() {
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId)
+            $.ajax({
+                url: '/api/user/' + userId,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div layout:fragment="content" name="content">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Tìm kiếm</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div>
+                            <table class="table align-items-center mb-0">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="tile">
+                                            <div class="tile-body">
+                                                <form action="#" th:action="@{/call-api/timkiem/users}" th:object="${view}">
+                                                    <fieldset>
+                                                        <div style="margin-left: 20px">
+                                                            <div class="row form-group">
+                                                                <label class="col-md-2">
+                                                                    Từ khóa:
+                                                                </label>
+                                                                <div class="col-md-4">
+                                                                    <input type="text" autocomplete="off" name="tuKhoa" th:class="form-control"/>
+                                                                </div>
+                                                                <div class="col-md-2" style="text-align: right">
+                                                                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <label class="col-md-2">
+                                                                    Vai trò:
+                                                                </label>
+                                                                <div class="col-md-4">
+                                                                    <select name="vaiTro" th:class="form-control">
+                                                                        <option value="">---Chọn vai trò---</option>
+                                                                        <th:block th:each="cd : ${lstVaiTro}">
+                                                                            <option th:value="${cd.id}">[[${cd.tenVaiTro}]]</option>
+                                                                        </th:block>
+                                                                    </select>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Danh sách người dùng</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class="table-responsive p-0">
+                            <div style="text-align: right">
+                                <a href="#" onclick="hienThiThemMoi()" class="btn btn-success" data-toggle="modal" data-target="#modalNguoiDung">Thêm mới</a>
+                            </div>
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Tên đăng nhập</th>
+                                    <th>Họ tên</th>
+                                    <th>Điện thoại</th>
+                                    <th>Email</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Ngày tạo</th>
+                                    <th>Vai trò</th>
+                                    <th>Xử lý</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="s : ${lstNguoiDung}">
+                                    <td>[[${s.tenDangNhap}]]</td>
+                                    <td>[[${s.hoTen}]]</td>
+                                    <td>[[${s.dienThoai}]]</td>
+                                    <td>[[${s.email}]]</td>
+                                    <td>[[${s.diaChi}]]</td>
+                                    <td th:text="${#dates.format(s.ngayTao, 'dd-MM-yyyy')}">[[${s.ngayTao}]]</td>
+                                    <td>[[${s.tenVaiTro}]]</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#modalNguoiDung" href='#' th:attr="onclick=|suaThongTin(${s.id})|" onclick= "suaThongTin(${s.id})" title='Sửa User'>
+                                            <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                                        &nbsp;
+                                        <a class="btn btn-xs btn-danger" href='#' data-toggle="modal" data-target="#modalXoa" title='Xóa User' th:attr="onclick=|xoaThongTin(${s.id})|">
+                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Thiết kế giao diện dạng modal-->
+    <form id="modalNguoiDung" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        Thêm mới người dùng</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Tên người dùng:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" id="tenDangNhap" name="tenDangNhap" class="form-control"
+                                       placeholder="Nhập tên đăng nhập"/>
+                                <input type="hidden" id="hUserId" name="hUserId">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Mật khẩu:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="matKhau" name="matKhau" type="password" class="form-control"
+                                       placeholder="Nhập mật khẩu người dùng"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Họ tên:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="hoTen" name="hoTen" type="text" class="form-control"
+                                       placeholder="Nhập họ tên người dùng"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Điện thoại:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="dienThoai" name="dienThoai" type="text" class="form-control"
+                                       placeholder="Nhập điện thoại"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Email:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="email" name="email" type="text" class="form-control"
+                                       placeholder="Nhập địa chỉ email"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Vai trò:
+                            </label>
+                            <div class="col-md-9">
+                                <select id="vaiTro" name="vaiTro" class="form-control">
+                                    <option value="">---Chọn vai trò---</option>
+                                    <th:block th:each="vt :${lstVaiTro}">
+                                        <option th:value="${vt.id}">[[${vt.tenVaiTro}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Địa chỉ:
+                            </label>
+                            <div class="col-md-9">
+                                <textarea id="diaChi" name="diaChi" rows="4" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="themMoiHoacCapNhat()" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Form modal hỏi xoá người dùng-->
+    <fieldset id="modalXoa"  class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Thông báo xoá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="title-delete">
+
+                        <h3>Bạn có chắc chắn muốn xoá thông tin này không ?  </h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="thucHienXoa()" class="btn btn-primary">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+</body>
+</html>

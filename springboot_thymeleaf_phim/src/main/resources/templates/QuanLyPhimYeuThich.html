@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{detail/movielist}">
+<head>
+    <meta charset="UTF-8">
+    <title>Phim > Yêu thích</title>
+
+    <script>
+        function xoaThongTin(phimYTID) {
+
+            $("#phimYTID").val(phimYTID);
+        };
+
+        function thucHienXoa() {
+            var phimYTID = $("#phimYTID").val();
+            phimYTID = parseInt(phimYTID)
+            $.ajax({
+                url: '/api/phimyeuthich/' + phimYTID,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+    </script>
+</head>
+<body layout:fragment="content" id="content">
+<th:block th:each="pyt: ${lstPhimYeuThich}">
+    <div class="movie-item-style-2" th:if="${pyt.trangThai}==1">
+        <img th:src="@{'/image/'+${pyt.anh}}" alt="">
+        <div class="mv-item-infor">
+            <h6><a  th:href="@{'/chitiet-phim/'+${pyt.id}}">[[${pyt.tenPhim}]]</a></h6>
+            <p class="rate">
+                <i class="ion-android-star"></i>
+                <span>[[${pyt.diem}]]</span> /10
+            </p>
+            <p class="describe">[[${pyt.moTa}]]</p>
+            <p class="run-time">[[${pyt.thoiLuong}]]/phút    .     <span>[[${pyt.tenTheLoai}]] </span></p>
+            <p> Ngày chiếu <a th:text="${#dates.format(pyt.ngayChieu, 'dd-MM-yyyy')}">[[${pyt.ngayChieu}]]</a></p>
+            <p>Đạo diễn: <a href="#">[[${pyt.tenDaoDien}]]</a></p>
+            <p>Diễn viên: <a href="#">[[${pyt.tenDienVien}]]</a></p>
+            <div class="social-btn">
+                <a href="#" class="parent-btn"  style="font-size: 12px">
+                    <button style="background-color: #020d18 ; border: none; outline: none; font-size: 12px" type="submit"
+                            data-toggle="modal" data-target="#modalXoa" onclick="thucHienXoa()" id="phimYTID" th:value="${pyt.phimYTID}">
+                        <i class="ion-android-delete social-btn"></i></button> Bỏ thích</a>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

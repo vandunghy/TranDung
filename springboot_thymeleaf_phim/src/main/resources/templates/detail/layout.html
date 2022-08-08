@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- moviesingle07:38-->
+<head>
+	<!-- Basic need -->
+	<title>Open Pediatrics</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+	<meta name="author" content="">
+	<link rel="profile" href="#">
+
+    <!--Google Font-->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+	<!-- Mobile specific meta -->
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone-no">
+
+	<!-- CSS files -->
+	<link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<!-- BEGIN | Header -->
+<header class="ht-header">
+	<div class="container">
+		<div th:replace="home/header" ::header/>
+	</div>
+</header>
+<!-- END | Header -->
+
+<div class="hero mv-single-hero">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<!-- <h1> movie listing - list</h1>
+				<ul class="breadcumb">
+					<li class="active"><a href="#">Home</a></li>
+					<li> <span class="ion-ios-arrow-right"></span> movie listing</li>
+				</ul> -->
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-single movie-single movie_single">
+	<div class="container">
+		<div class="row ipad-width2">
+			<div layout:fragment="content">
+			</div>
+		</div>
+	</div>
+</div>
+<!-- footer section-->
+<footer class="ht-footer">
+	<div th:replace="home/footer" ::footer/>
+</footer>
+<!-- end of footer section-->
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+<script th:src="@{/js/plugins2.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+</body>
+<!-- moviesingle11:03-->
+</html>

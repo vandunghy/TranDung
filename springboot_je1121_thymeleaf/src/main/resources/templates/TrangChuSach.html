@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{home/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <th:block th:each="s,status : ${lstSach}">
+        <div class="templatemo_product_box">
+            <h1>[[${s.tenSach}]]<span>(by [[${s.tacGia}]])</span></h1>
+            <img  th:src="@{'/images/' + ${s.anhSach}}" alt="image" width="80" height="100" />
+            <div class="product_info">
+                <p>[[${s.moTa}]]</p>
+                <h3>[[${s.giaSach}]]</h3>
+                <div class="buy_now_button"><a href="#">Mua ngay</a></div>
+                <div class="detail_button"><a href="#">Chi tiết</a></div>
+            </div>
+            <div class="cleaner">&nbsp;</div>
+        </div>
+        <div th:if="${status.index%2 == 0}" class="cleaner_with_width"></div>
+        <div th:if="${status.index%2 != 0}" class="cleaner_with_height"></div>
+
+    </th:block>
+</div>
+</body>
+</html>

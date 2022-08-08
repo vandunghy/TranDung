@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<!-- movielist07:38-->
+<head>
+	<!--Google Font-->
+	<link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+	<!-- Mobile specific meta -->
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta name="format-detection" content="telephone-no">
+
+	<!-- CSS files -->
+	<link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<!-- BEGIN | Header -->
+<header class="ht-header">
+	<div class="container">
+		<div th:replace="home/header" ::header/>
+	</div>
+</header>
+<!-- END | Header -->
+<div class="hero common-hero">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="hero-ct">
+					<h1> Review - phim</h1>
+					<ul class="breadcumb">
+						<li class="active"><a href="#">Phim</a></li>
+						<li> <span class="ion-ios-arrow-right"></span> thể loại</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="page-single movie_list">
+	<div class="container">
+		<div class="row ipad-width2">
+			<div class="col-md-8 col-sm-12 col-xs-12">
+				<div class="topbar-filter">
+					<p>Danh sách thể loại: </p>
+					<a href="#" class="list"><i class="ion-ios-list-outline active"></i></a>
+					<a  href="#" class="grid"><i class="ion-grid"></i></a>
+				</div>
+				<div layout:fragment="content"/>
+				<div class="topbar-filter">
+					<label>Phim:</label>
+					<select>
+						<option value="range">5 Phim</option>
+						<option value="saab">10 Phim</option>
+					</select>
+					<div class="pagination2">
+						<span>Trang:</span>
+						<a class="active" href="#">1</a>
+						<a href="#">2</a>
+						<a href="#"><i class="ion-arrow-right-b"></i></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-4 col-sm-12 col-xs-12">
+				<div th:replace="detail/sidebar" ::sidebar/>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- footer section-->
+<footer class="ht-footer">
+	<div th:replace="home/footer" ::footer/>
+</footer>
+<!-- end of footer section-->
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+<script th:src="@{/js/plugins2.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+</body>
+
+<!-- movielist07:38-->
+</html>

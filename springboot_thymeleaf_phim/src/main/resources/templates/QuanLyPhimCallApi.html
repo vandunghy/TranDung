@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin phim</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+
+    <!--    Rich-Text-Editor-->
+    <link rel="stylesheet" type="text/css" th:href="@{/js/richtext.min.css}"/>
+
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.richtext.min.js}"></script>
+
+    <style>
+        .img-wraps {
+            position: relative;
+            display: inline-block;
+
+            font-size: 0;
+        }
+        .img-wraps .closes {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            z-index: 100;
+            background-color: #FFF;
+            padding: 4px 3px;
+
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+
+            text-align: center;
+            font-size: 22px;
+            line-height: 10px;
+            border-radius: 50%;
+            border:none;
+        }
+        .img-wraps:hover .closes {
+            opacity: 1;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".ngay").datepicker(
+                {
+                    dateFormat: 'yy-mm-dd'
+                }
+            );
+            $("#noiDung").richText();
+        })
+    </script>
+
+    <script>
+        $(".datepicker").datepicker({
+            changeYear: true,
+            changeMonth: true,
+        });
+        $(".sdate").datepicker("setDate", "1/1/2000");
+        $(".edate").datepicker("setDate", "1/1/2030");
+    </script>
+    <script type="text/javascript">
+
+        function hienThiThemMoi()
+        {
+            $("#modalTitle").text("Thêm mới thông tin phim");
+            $("#hUserId").val("");
+            $("#tenPhim").val("");
+            $("#moTa").val("");
+            $("#namSanXuat").val("");
+            $("#thoiLuong").val("");
+            $("#ngayChieu").val("");
+            $("#quocGia").val("");
+            $("#dienVien").val("");
+            $("#daoDien").val("");
+            $("#theLoai").val("");
+            $("#anh").val("");
+            $("#noiDung").val("");
+            $("#tenPhim").focus();
+        }
+        function themMoiHoacCapNhat() {
+            //alert("Hello");
+            let form = $("#modalPhim").validate
+            ({
+                rules: {
+                    tenPhim: "required",
+                    moTa: "required",
+                    namSanXuat: "required",
+                    thoiLuong: "required",
+                    ngayChieu: "required",
+                    quocGia: "required",
+                    dienVien: "required",
+                    daoDien: "required",
+                    theLoai: "required",
+                    anh: "required",
+                    noiDung: "required",
+                },
+                messages: {
+                    tenPhim: "Bạn cần phải nhập tên phim",
+                    moTa: "Bạn cần phải nhập mô tả",
+                    namSanXuat: "Bạn hãy chọn ngày tháng năm sản xuất",
+                    thoiLuong: "Bạn cần nhập thời lượng phim",
+                    ngayChieu: "Bạn hãy chọn ngày chiếu",
+                    quocGia: "Bạn hãy chọn quốc gia",
+                    dienVien: "Bạn hãy chọn tên diễn viên",
+                    daoDien: "Bạn hãy chọn tên đạo diễn",
+                    theLoai: "Bạn hãy chọn thể loại phim",
+                    anh: "Bạn hãy chọn file ảnh",
+                    noiDung: "Bạn hãy nhập nội dung",
+                },
+                submitHandler: function () {
+                    if(form.valid()) {
+                        xuLyThemMoi();
+                    }
+                }
+
+            });
+        }
+
+        function xuLyThemMoi() {
+            //Lấy thông tin trên giao diện
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId);
+
+            var urlPost = '/api/phim/add';
+            var methodType = "POST";
+            //TH sửa
+            if (userId > 0) {
+                urlPost = '/api/phim/' + userId;
+                methodType = "PUT";
+            }
+
+            var tenPhim = $("#tenPhim").val();
+            var moTa = $("#moTa").val();
+            var namSanXuat = $("#namSanXuat").val();
+            var thoiLuong = $("#thoiLuong").val();
+            var ngayChieu = $("#ngayChieu").val();
+            var quocGia = $("#quocGia").val();
+            var dienVien = $("#dienVien").val();
+            var daoDien = $("#daoDien").val();
+            var theLoai = $("#theLoai").val();
+            var anh = $("#anh").val().replace(/C:\\fakepath\\/i, '');
+            var noiDung = $("#noiDung").val();
+
+            //Khai báo mảng
+            var formData = {}
+            formData["tenPhim"] = tenPhim;
+            formData["moTa"] = moTa;
+            formData["namSanXuat"] = namSanXuat;
+            formData["thoiLuong"] = thoiLuong;
+            formData["ngayChieu"] = ngayChieu;
+            formData["quocGia"] = quocGia;
+            formData["dienVien"] = dienVien;
+            formData["daoDien"] = daoDien;
+            formData["theLoai"] = theLoai;
+            formData["anh"] = anh;
+            formData["noiDung"] = noiDung;
+
+            var imgFormData = new FormData();
+            imgFormData.append('fUpload', $('input[type=file]')[0].files[0]);
+
+            $.ajax({
+                url: '/api/phim/upload',
+                data: imgFormData,
+                type: 'POST',
+                contentType: false,
+                processData: false
+            });
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.id != null) {
+                        $("#modalPhim").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        function themNhieuAnh() {
+
+            var files = $("#tenAnh")[0].files;
+
+
+            for (var i = 0; i < files.length; i++){
+                var imgFormData = new FormData();
+                imgFormData.append('fUpload', $('#tenAnh')[0].files[i]);
+
+                $.ajax({
+                    url: '/api/anh/upload',
+                    data: imgFormData,
+                    type: 'POST',
+                    contentType: false,
+                    processData: false
+                });
+            }
+
+            var id = $("#phimId").val();
+            var tenAnh = "";
+            for (var i = 0; i < files.length; i++){
+                tenAnh = files[i].name;
+                var formData = {}
+                formData["tenAnh"] = tenAnh;
+                formData["phim"] = id;
+                formData["ten"] = tenAnh.substring(0, tenAnh.indexOf('.'));
+
+                $.ajax({
+                    url: "/api/anh/add",
+                    contentType: "application/json; charset=utf-8;",
+                    dataType: "json",
+                    data: JSON.stringify(formData),
+                    type: "POST",
+                    success: function (data) {
+                        //alert("Hello");
+                        if (data.id != null) {
+
+                            $("#modalAnhPhim").modal("hide")
+
+                            //Reload lại trang
+                            window.location.reload();
+                        } else {
+                            $('#tile-body1').nextAll(".spanError").remove();
+                            $('#tile-body1').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                        }
+
+                    },
+                    error: function (error) {
+                        alert("Có lỗi xảy ra " + error.name);
+                    }
+
+                });
+            }
+        }
+        function thucHienXoaAnhTheoPhimVaTen(phimId, tenAnh) {
+            $.ajax({
+                url: '/api/anh/' + phimId + '/' + tenAnh,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    //alert("Hello");
+                    if (data.name != null) {
+
+                        window.location.reload();
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra  rồi " + error.name);
+                }
+            });
+        }
+
+        function thongTinChiTietModalAnhPhim(phim) {
+            $.ajax({
+                type: "GET",
+                url: "/api/phim/" + phim,
+                data: {
+                    phim: phim
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data) {
+                    //alert(data.hoTen);
+                    //Hiển thị lên giao diện
+                    $("#modalTitleAnhPhim").text("Thêm ảnh phim");
+                    $("#phimId").val(data.id);
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: "/api/anh/dsanh/" + phim,
+                data: {
+                    phim: phim
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (result) {
+
+                    var thongTin = "";
+                    $.each(result, function (index, anhP) {
+                        thongTin += "<div class=\"img-wraps\">";
+                        thongTin += "<span onclick='thucHienXoaAnhTheoPhimVaTen(" + anhP.phim + ", \"" + anhP.ten + "\")' class=\"closes\" title=\"Xóa ảnh\">×</span>";
+                        thongTin += "<img src='/image/" + anhP.tenAnh + "' height='150' width='170'>";
+                        thongTin += "</div>";
+                    });
+
+                    $("#dsAnhPhim").html(thongTin);
+                }
+            });
+        }
+
+        /*
+         * Hàm sửa thông tin phim theo id
+         */
+        function suaThongTin(userId) {
+            //Lấy thông tin chi tiết của phim cần sửa
+            thongTinChiTiet(userId);
+        }
+
+        /*
+        * Hàm hiển thị thông tin chi tiết phim bằng jquery ajax
+        */
+        function thongTinChiTiet(userId)
+        {
+            $.ajax({
+                type: "GET",
+                url: "/api/phim/" + userId,
+                data: {
+                    id: userId
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data)
+                {
+                    //Hiển thị lên giao diện
+                    $("#modalTitle").text("Sửa thông tin");
+                    $("#hUserId").val(data.id);
+                    $("#tenPhim").val(data.tenPhim);
+                    $("#moTa").val(data.moTa);
+                    $("#namSanXuat").val(data.namSanXuat);
+                    $("#thoiLuong").val(data.thoiLuong);
+                    $("#ngayChieu").val(data.ngayChieu);
+                    $("#quocGia").val(data.quocGia);
+                    $("#dienVien").val(data.dienVien);
+                    $("#daoDien").val(data.daoDien);
+                    $("#theLoai").val(data.theLoai);
+                    $("#anh").val(data.anh);
+                    $("#noiDung").val(data.noiDung);
+                }
+            });
+        }
+
+        /*
+        * Hàm xóa thông tin
+         */
+        function xoaThongTin(userId) {
+
+            $("#hUserId").val(userId);
+        };
+
+        function thucHienXoa() {
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId)
+            $.ajax({
+                url: '/api/phim/' + userId,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        /*
+         * Hàm duyệt Phim
+         */
+        function duyetPhim(id) {
+            $.ajax({
+                url: '/api/phim/approve/' + id,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "PUT",
+                success: function (data) {
+                    if (data.name != null) {
+                        //Reload lại trang
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        function duyetNhieu() {
+            $("input[name='chkDuyet']:checked").each(function () {
+                duyetPhim(this.value);
+            });
+        }
+
+        /*
+        *Hàm bỏ duyệt sản phẩm
+         */
+        function huyDuyetPhim(id) {
+
+            $.ajax({
+                url: '/api/phim/disapprove/' + id,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "PUT",
+                success: function (data) {
+                    if (data.name != null) {
+                        //Reload lại trang
+                        window.location.reload();
+                    }
+                }
+            });
+        }
+
+        function huyDuyetNhieu() {
+            $("input[name='chkHuyDuyet']:checked").each(function () {
+                huyDuyetPhim(this.value);
+            });
+        }
+    </script>
+</head>
+<body>
+<div layout:fragment="content" name="content">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Tìm kiếm</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div>
+                            <table class="table align-items-center mb-0">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="tile">
+                                            <div class="tile-body">
+                                                <form action="#" th:action="@{/call-api/timkiem/phim}" th:object="${phimView}">
+                                                    <fieldset>
+                                                        <div class="row form-group"  style="margin-left: 20px">
+                                                            <label class="col-md-2">
+                                                                Từ ngày:
+                                                            </label>
+                                                            <div class="col-md-3">
+                                                                <input type="text" autocomplete="off" value="01/01/2000"  name="startDate" id="startDate" class="form-control datepicker sdate"/>
+                                                            </div>
+                                                            <label class="col-md-2">
+                                                                Đến ngày:
+                                                            </label>
+                                                            <div class="col-md-2">
+                                                                <input type="text" autocomplete="off" value="01/01/3000"  name="endDate" id="endDate" class="form-control datepicker edate"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group"  style="margin-left: 20px">
+                                                            <label class="col-md-2">
+                                                                Từ khóa:
+                                                            </label>
+                                                            <div class="col-md-3">
+                                                                <input type="text" autocomplete="off"  name="tuKhoa" th:class="form-control" placeholder="Nhập từ khóa"/>
+                                                            </div>
+                                                            <label class="col-md-2">
+                                                                Thể loại:
+                                                            </label>
+                                                            <div class="col-md-2">
+                                                                <select name="theLoai" th:class="form-control">
+                                                                    <option value="">---Chọn thể loại---</option>
+                                                                    <th:block th:each="cd : ${lstTheLoai}">
+                                                                        <option th:value="${cd.id}">[[${cd.tenTheLoai}]]</option>
+                                                                    </th:block>
+                                                                </select>
+                                                            </div>
+                                                            <div class="col-md-2" style="text-align: right">
+                                                                <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group"  style="margin-left: 20px">
+                                                            <label class="col-md-2">
+                                                                Quốc gia:
+                                                            </label>
+                                                            <div class="col-md-3">
+                                                                <select name="quocGia" th:class="form-control">
+                                                                    <option value="">---Chọn quốc gia---</option>
+                                                                    <th:block th:each="cd : ${lstQuocGia}">
+                                                                        <option th:value="${cd.id}">[[${cd.tenQuocGia}]]</option>
+                                                                    </th:block>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-md-2">
+                                                                Đạo diễn:
+                                                            </label>
+                                                            <div class="col-md-2">
+                                                                <select name="daoDien" th:class="form-control">
+                                                                    <option value="">---Chọn đạo diễn---</option>
+                                                                    <th:block th:each="cd : ${lstDaoDien}">
+                                                                        <option th:value="${cd.id}">[[${cd.hoTen}]]</option>
+                                                                    </th:block>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Danh sách phim</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div class=" pull-right ms-10 hidden-xs hidden-sm" style="text-align: right">
+                            <a href="#" onclick="hienThiThemMoi()"
+                               class="btn btn-success" data-toggle="modal" data-target="#modalPhim">Thêm mới</a>&nbsp;
+                            <button class="btn btn-info " id="btnDuyet"
+                                    onclick="duyetNhieu()"  >Duyệt</button> &nbsp;
+                            <button class="btn btn-danger " id="btnHuyDuyet"
+                                    onclick="huyDuyetNhieu()" >Bỏ duyệt</button>
+                        </div>
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>Ảnh</th>
+                                    <th>Tên phim</th>
+                                    <th>Năm Sản xuất</th>
+                                    <th>Ngày chiếu</th>
+                                    <th>Trạng thái</th>
+                                    <th>Người duyệt</th>
+                                    <th class="border-top-0">
+                                        <ul style="list-style-type: none; text-align: left" class="form-check">
+                                            <li>
+                                                <input type="checkbox" class="form-check-input" id="select-all" />
+                                                <label class="form-check-label">Duyệt</label>
+                                            </li>
+
+                                            <li>
+                                                <input type="checkbox" class="form-check-input" id="select-all1" />
+                                                <label class="form-check-label">Bỏ duyệt</label>
+                                            </li>
+                                        </ul>
+                                    </th>
+                                    <th>Xử lý</th>
+                                </tr>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="s : ${lstPhim}">
+                                    <td>
+                                        <img width="100" height="100" th:src="@{'/image/' + ${s.anh}}"/>
+                                    </td>
+                                    <td>[[${s.tenPhim}]]</td>
+                                    <td th:text="${#dates.format(s.namSanXuat, 'dd-MM-yyyy')}">[[${s.namSanXuat}]]</td>
+                                    <td th:text="${#dates.format(s.ngayChieu, 'dd-MM-yyyy')}">[[${s.ngayChieu}]]</td>
+                                    <td>[[${s.trangThai}]]</td>
+                                    <td>[[${s.hoTen}]]</td>
+                                    <td>
+                                        <th:block th:if="${s.trangThai} == 'Chưa duyệt' or ${s.trangThai} == '0'">
+                                            <span class="form-check">
+                                                <input type="checkbox" class="form-check-input" name="chkDuyet" th:value="${s.id}">
+                                                <label class="form-check-label">
+                                                    Duyệt
+                                                </label>
+                                            </span>
+                                        </th:block>
+                                        <th:block  th:unless="${s.trangThai} == 'Chưa duyệt' or ${s.trangThai} == '0'">
+                                        <span class="form-check">
+                                            <input type="checkbox" class="form-check-input" name="chkHuyDuyet" th:value="${s.id}">
+                                                <label class="form-check-label">
+                                                    Bỏ duyệt
+                                                </label>
+                                        </span>
+                                        </th:block>
+                                    </td>
+                                    <td>
+                                        <a data-toggle="modal" data-target="#modalAnhPhim" href='#' th:onclick="thongTinChiTietModalAnhPhim([[${s.id}]])" title='Thêm ảnh sản phẩm'><i class='far fa-image'></i></a>
+
+                                        <a class="btn btn-info" title="Xem chi tiết" th:href="@{'/xemchitiet_phim/'+${s.id}}"><i class="ace-icon fa fa-dedent bigger-120"></i></a>
+
+                                        &nbsp;
+                                        <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#modalPhim" href='#' th:attr="onclick=|suaThongTin(${s.id})|" onclick= "suaThongTin(${s.id})" title='Sửa'>
+                                            <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                                        &nbsp;
+                                        <a class="btn btn-xs btn-danger" href='#' data-toggle="modal" data-target="#modalXoa" title='Xóa' th:attr="onclick=|xoaThongTin(${s.id})|">
+                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Thiết kế giao diện dạng modal-->
+    <form id="modalPhim" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        Thêm mới phim</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Tên phim <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-12">
+                                <input type="text" id="tenPhim" name="tenPhim" autocomplete="off" class="form-control"
+                                       placeholder="Nhập tên phim"/>
+                                <input type="hidden" id="hUserId" name="hUserId">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">
+                                Ảnh<span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-8">
+                                <input type="file" accept="image/png, image/jpeg" id="anh" name="fUpload" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">
+                                Năm Sản xuất<span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <input class="ngay form-control"  autocomplete="off" id="namSanXuat" path="namSanXuat"
+                                       placeholder="Năm sản xuất"/>
+                            </div>
+                            <label class="col-md-2"   style="margin-left: 70px">
+                                Ngày chiếu <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <input  class="ngay form-control"  autocomplete="off" id="ngayChieu" path="ngayChieu"
+                                        placeholder="Nhập ngày chiếu"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">
+                                Diễn viên <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <select id="dienVien" name="dienVien" class="form-control">
+                                    <option value="">---Chọn diễn viên---</option>
+                                    <th:block th:each="dv : ${lstDienVien}">
+                                        <option th:value="${dv.id}">[[${dv.hoTen}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                            <label class="col-md-2" style="margin-left: 70px">
+                                Đạo diễn<span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <select id="daoDien" name="daoDien" class="form-control">
+                                    <option value="">---Chọn đạo diễn---</option>
+                                    <th:block th:each="dd : ${lstDaoDien}">
+                                        <option th:value="${dd.id}">[[${dd.hoTen}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">
+                                Thể loại <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div  class="col-md-3" >
+                                <select id="theLoai" name="theLoai" class="form-control">
+                                    <option value="">---Chọn thể loại---</option>
+                                    <th:block th:each="tl : ${lstTheLoai}">
+                                        <option th:value="${tl.id}">[[${tl.tenTheLoai}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                            <label class="col-md-2"  style="margin-left: 70px">
+                                Quốc gia <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <select id="quocGia" name="quocGia" class="form-control">
+                                    <option value="">---Chọn quốc gia---</option>
+                                    <th:block th:each="qg : ${lstQuocGia}">
+                                        <option th:value="${qg.id}">[[${qg.tenQuocGia}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2">
+                                Thời lượng <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-3">
+                                <input id="thoiLuong" name="thoiLuong" type="text" class="form-control"
+                                       placeholder="Nhập thời lượng"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Mô tả <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-12">
+                                <textarea id="moTa" name="moTa" rows="3" class="form-control"
+                                          placeholder="Nhập mô tả"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Nội dung <span style="color: #0d6efd">(*)</span>
+                            </label>
+                            <div class="col-md-12">
+                                <textarea id="noiDung" name="noiDung" rows="5" class="form-control"
+                                          placeholder="Nhập nội dung"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="themMoiHoacCapNhat()" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Form modal hỏi xoá-->
+    <fieldset id="modalXoa"  class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Thông báo xoá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="title-delete">
+
+                        <h3>Bạn có chắc chắn muốn xoá thông tin này không ?  </h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="thucHienXoa()" class="btn btn-primary">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <form id="modalAnhPhim" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitleAnhPhim">
+                        Thêm mới ảnh phim</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body1">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Ảnh phim:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="file" multiple="multiple" accept="image/png, image/jpeg" id="tenAnh" name="fUpload" class="form-control"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Phim:
+                            </label>
+                            <div class="col-md-9">
+                                <select class="form-select" id="phimId" name="phimId" disabled>
+                                    <th:block th:each="p : ${lstPhim}">
+                                        <option th:value="${p.id}">[[${p.tenPhim}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" id="dsAnhPhim">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="themAnh" type="submit" onclick="themNhieuAnh()"
+                            class="btn btn-danger  d-none d-md-block pull-right ms-3 hidden-xs hidden-sm waves-effect waves-light text-white">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <script>
+        $(document).ready(function() {
+            $('#select-all').click(function(event) {
+                if(this.checked) {
+                    $("input[name='chkDuyet']").each(function() {
+                        this.checked = true;
+                    });
+                }else{
+                    $("input[name='chkDuyet']").each(function() {
+                        this.checked = false;
+                    });
+                }
+            });
+
+            $('#select-all1').click(function(event) {
+                if(this.checked) {
+                    $("input[name='chkHuyDuyet']").each(function() {
+                        this.checked = true;
+                    });
+                }else{
+                    $("input[name='chkHuyDuyet']").each(function() {
+                        this.checked = false;
+                    });
+                }
+            });
+        });
+    </script>
+</div>
+</body>
+</html>

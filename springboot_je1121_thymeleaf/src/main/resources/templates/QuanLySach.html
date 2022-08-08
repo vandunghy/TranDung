@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin sách</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body layout:fragment="content">
+<div>
+    <div style="width: 100%; text-align: center;">
+        <h1>Quản lý thông tin sách</h1>
+    </div>
+    <div style="width: 100%; text-align: right; margin-bottom: 5px;">
+        <a th:href="@{/admin/sach-add}" class="btn btn-primary">Thêm mới</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <form action="#" th:action="@{/admin/timkiem-sach}" >
+                        <fieldset>
+                            <legend>Nhập thông tin tìm kiếm</legend>
+                            <div class="row form-group">
+                                <label class="col-md-2">
+                                    Từ khóa:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" name="tuKhoa" th:class="form-control"/>
+                                </div>
+                                <label class="col-md-2">
+                                    Từ khóa:
+                                </label>
+                                <div class="col-md-3">
+                                    <select name="maChuDe" th:class="form-control">
+                                        <th:block th:each="cd : ${lstChuDe}">
+                                            <option th:value="${cd.maChuDe}">[[${cd.tenChuDe}]]</option>
+                                        </th:block>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <table class="table table-bordered table-striped" border="1" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th>Ảnh</th>
+            <th>Mã sách</th>
+            <th>Tên sách</th>
+            <th>Mô tả</th>
+            <th>Giá sách</th>
+            <th>Tác giả</th>
+            <th style="width:100px;"></th>
+        </tr>
+        <tr th:each="s : ${lstSach}">
+            <td>
+                <img width="150" height="150" th:src="@{'/images/' + ${s.anhSach}}" />
+            </td>
+            <td>[[${s.maSach}]]</td>
+            <td>[[${s.tenSach}]]</td>
+            <td>[[${s.moTa}]]</td>
+            <td>[[${s.giaSach}]]</td>
+            <td>[[${s.tacGia}]]</td>
+            <td>
+                <a class="btn btn-xs btn-info" th:href="@{'/sach-edit/' + ${s.maSach}}"><i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                &nbsp;
+                <a class="btn btn-xs btn-danger" th:href="@{'/sach-delete/' + ${s.maSach}}"><i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

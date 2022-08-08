@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin chủ đề</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body layout:fragment="content">
+<div>
+    <div style="width: 100%; text-align: center;">
+        <h1>Quản lý thông tin chủ đề</h1>
+    </div>
+    <div style="width: 100%; text-align: right; margin-bottom: 5px;">
+        <a th:href="@{/chude-add}" class="btn btn-primary">Thêm mới</a>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <form action="#" th:action="@{/timkiem-chude}" >
+                        <fieldset>
+                            <legend>Nhập thông tin tìm kiếm</legend>
+                            <div class="row form-group">
+                                <label class="col-md-2">
+                                    Từ khóa:
+                                </label>
+                                <div class="col-md-3">
+                                    <input type="text" name="tuKhoa" th:class="form-control"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <table class="table table-bordered table-striped" border="1" style="width: 100%; border-collapse: collapse;">
+        <tr>
+            <th>Mã chủ đề</th>
+            <th>Tên chủ đề</th>
+            <th style="width:100px;"></th>
+        </tr>
+        <tr th:each="s : ${lstChuDe}">
+
+            <td>[[${s.maChuDe}]]</td>
+            <td>[[${s.tenChuDe}]]</td>
+            <td>
+                <a class="btn btn-xs btn-info" th:href="@{'/chude-edit/' + ${s.maChuDe}}"><i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                &nbsp;
+                <a class="btn btn-xs btn-danger" th:href="@{'/chude-delete/' + ${s.maChuDe}}"><i class="ace-icon fa fa-trash-o bigger-120"></i></a>
+
+            </td>
+        </tr>
+    </table>
+    </div>
+ </body>
+</html>

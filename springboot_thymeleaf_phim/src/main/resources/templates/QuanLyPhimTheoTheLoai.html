@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{detail/movielist}">
+<head>
+    <meta charset="UTF-8">
+    <title>Phim > Thể loại</title>
+</head>
+<body layout:fragment="content" id="content">
+<th:block th:each="ptl: ${lstPhimTheLoai}">
+    <div class="movie-item-style-2" th:if="${ptl.trangThai}==1">
+        <img th:src="@{'/image/'+${ptl.anh}}" alt="">
+        <div class="mv-item-infor">
+            <h6><a  th:href="@{'/chitiet-phim/'+${ptl.id}}">[[${ptl.tenPhim}]]</a></h6>
+            <p class="rate">
+                <i class="ion-android-star"></i>
+                <span>[[${ptl.diem}]]</span> /10
+            </p>
+            <p class="describe">[[${ptl.moTa}]]</p>
+            <p class="run-time">[[${ptl.thoiLuong}]]    .     <span>[[${ptl.tenTheLoai}]] </span></p>
+            <p> Ngày chiếu <a th:text="${#dates.format(ptl.ngayChieu, 'dd-MM-yyyy')}">[[${ptl.ngayChieu}]]</a></p>
+            <p>Đạo diễn: <a href="#">[[${ptl.tenDaoDien}]]</a></p>
+            <p>Diễn viên: <a href="#">[[${ptl.tenDienVien}]]</a></p>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

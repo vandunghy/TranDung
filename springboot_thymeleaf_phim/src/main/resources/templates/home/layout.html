@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7 no-js" lang="en-US">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie ie8 no-js" lang="en-US">
+<![endif]-->
+<!--[if !(IE 7) | !(IE 8)  ]><!-->
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+
+<head>
+    <!--Google Font-->
+    <link rel="stylesheet" href='http://fonts.googleapis.com/css?family=Dosis:400,700,500|Nunito:300,400,600' />
+    <!-- Mobile specific meta -->
+    <meta name=viewport content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone-no">
+
+    <!-- CSS files -->
+    <link rel="stylesheet" type="text/css" th:href="@{/css/plugins.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+
+</head>
+<body>
+<!-- BEGIN | Header -->
+<header class="ht-header">
+    <div th:replace="home/header" ::header/>
+</header>
+<!-- END | Header -->
+<div class="slider movie-items">
+    <div th:replace="home/slider" ::slider/>
+</div>
+<div class="movie-items">
+    <div class="container">
+        <div class="row ipad-width">
+            <div class="col-md-8">
+                <div class="title-hd">
+                    <h2>Danh sách phim</h2>
+                </div>
+                <div class="tabs">
+                    <div class="tab-content">
+                         <div id="tab1" class="tab active">
+                            <div layout:fragment="content">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div th:replace="home/sidebar" ::sidebar/>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="trailers">
+    <div th:replace="home/trailers" ::trailers/>
+</div>
+<!-- latest new v1 section-->
+<div class="latestnew">
+    <div th:replace="home/latestnew" ::latestnew/>
+</div>
+<!--end of latest new v1 section-->
+<!-- footer section-->
+<footer class="ht-footer">
+    <div th:replace="home/footer" ::footer/>
+</footer>
+<!-- end of footer section-->
+
+<script th:src="@{/js/jquery.js}"></script>
+<script th:src="@{/js/plugins.js}"></script>
+<script th:src="@{/js/plugins2.js}"></script>
+<script th:src="@{/js/custom.js}"></script>
+</body>
+</html>

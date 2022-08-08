@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="footer" name="footer">
+<div class="container">
+    <div class="flex-parent-ft">
+        <div class="flex-child-ft item1">
+            <a href="index-2.html"><img class="logo" th:src="@{/images/logo1.png}" alt=""></a>
+            <p>20 Ngõ 678, Đường Láng<br>
+                Đống Đa, Hà Nội</p>
+            <p>Liên hệ: <a href="#">(+84) 246880888</a></p>
+        </div>
+        <div class="flex-child-ft item2">
+            <h4>Quản lý</h4>
+            <ul>
+                <li><a href="#">Review</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Liên hệ</a></li>
+                <li><a href="#">Điều khoản điều lệ</a></li>
+                <li><a href="#">Chính sách quyền riêng tư</a></li>
+                <li><a href="#">Trợ giúp</a></li>
+            </ul>
+        </div>
+        <div class="flex-child-ft item3">
+            <h4>Trợ giúp</h4>
+            <ul>
+                <li><a href="#">Điều khoản sử dụng</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+                <li><a href="#">Bảo mật</a></li>
+            </ul>
+        </div>
+        <div class="flex-child-ft item4">
+            <h4>Tài khoản</h4>
+            <ul>
+                <li><a href="#">Tài khoản của tôi</a></li>
+                <li><a href="#">Danh sách theo dõi</a></li>
+                <li><a href="#">Bộ sưu tập</a></li>
+                <li><a href="#">Hướng dẫn sử dụng</a></li>
+            </ul>
+        </div>
+        <div class="flex-child-ft item5">
+            <h4>Bản tin</h4>
+            <p>Đăng ký để nhận tin tức mới nhất từ chúng tôi.</p>
+            <form action="#">
+                <input type="text" placeholder="Nhập email...">
+            </form>
+            <a href="#" class="btn">Đăng ký <i class="ion-ios-arrow-forward"></i></a>
+        </div>
+    </div>
+</div>
+<div class="ft-copyright">
+    <div class="backtotop">
+        <p><a href="#" id="back-to-top">Back to top  <i class="ion-ios-arrow-thin-up"></i></a></p>
+    </div>
+</div>
+</div>
+</body>
+</html>

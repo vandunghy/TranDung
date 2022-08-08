@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới hoặc sửa thông tin sách</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body layout:fragment="content">
+<form action="#" method="post" th:action="@{/themMoiNguoiDung}" th:object="${nguoidung}" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Nhập thông tin Người dùng</legend>
+        <table>
+<!--            <tr>-->
+<!--                <td>-->
+<!--                    ID:-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                    <input type="text" th:field="*{id}"/>-->
+<!--                    <input type="hidden" name="userId" th:value="${nguoidung.id}"/>-->
+<!--                </td>-->
+<!--            </tr>-->
+            <tr>
+                <td>
+                    Tên đăng nhập:
+                </td>
+                <td>
+                    <input type="text" th:field="*{tenDangNhap}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Mật khẩu:
+                </td>
+                <td>
+                    <input type="text" th:field="*{matKhau}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Họ tên:
+                </td>
+                <td>
+                    <input type="file" th:field="*{hoTen}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Điện thoại:
+                </td>
+                <td>
+                    <input type="text" th:field="*{dienThoai}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Email:
+                </td>
+                <td>
+                    <input type="text" th:field="*{email}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Địa chỉ:
+                </td>
+                <td>
+                    <input type="text" th:field="*{diaChi}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="submit" name="btnCapNhat" value="Cập nhật"/>
+                    &nbsp;
+                    <a th:href="@{/quanly-nguoidung}">Trở về</a>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+</body>
+</html>

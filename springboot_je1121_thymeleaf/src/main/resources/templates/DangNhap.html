@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập hệ thống</title>
+</head>
+<body>
+<form action="#" method="post" th:action="@{/thucHienDangNhap}" th:object="${user}">
+
+    <div style="width: 100%; text-align: center">
+        <h2>Đăng nhập hệ thống</h2>
+    </div>
+
+    <fieldset>
+        <legend>Nhập thông tin đăng nhập</legend>
+        <div class="form-group">
+            <div class="row">
+                <label class="col-md-2">Tên đăng nhập: </label>
+                <div class="col-md-4">
+                    <input th:field="*{tenDangNhap}"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-2">Mật khẩu: </label>
+                <div class="col-md-4">
+                    <input type="password" th:field="*{matKhau}"/>
+                </div>
+            </div>
+            <div class="row">
+                <label class="col-md-2"></label>
+                <div class="col-md-4">
+                    <input class="btn btn-primary" type="submit" value="Đăng nhập" name="btnDangNhap">
+                    <a th:href="@{/trang-chu}" class="btn btn-danger">Trở về</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <label class="col-md-2"></label>
+            <div class="col-md-4">
+                <span class="alert-warning">[[${thongBao}]]</span>
+            </div>
+        </div>
+    </fieldset>
+</form>
+
+</body>
+</html>

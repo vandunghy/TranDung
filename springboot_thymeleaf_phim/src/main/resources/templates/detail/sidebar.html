@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body th:fragment="sidebar">
+<div class="sidebar">
+    <div class="searh-form">
+        <h4 class="sb-title">Tìm kiếm phim</h4>
+        <form class="form-style-1" action="#" th:action="@{/trang-chu/timkiem/phim}" th:object="${phimView}" method="post">
+            <div class="row">
+                <div class="col-md-12 form-it">
+                    <label>Tên phim</label>
+                    <input type="text" name="tuKhoa" placeholder="Nhập từ khóa">
+                </div>
+                <div class="col-md-12 form-it">
+                    <label>Thể loại</label>
+                    <div class="group-ip">
+                        <select name="theLoai">
+                            <option value="">--Chọn thể loại</option>
+                            <th:block th:each="tl : ${lstTheLoai}">
+                                <option th:value="${tl.id}">[[${tl.tenTheLoai}]]</option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                </div>
+                <div class="col-md-12 form-it">
+                    <label>Quốc gia:</label>
+                    <select name="quocGia">
+                        <option value="">---Chọn quốc gia---</option>
+                        <th:block th:each="qg : ${lstQuocGia}">
+                            <option th:value="${qg.id}">[[${qg.tenQuocGia}]]</option>
+                        </th:block>
+                    </select>
+
+                </div>
+                <div class="col-md-12 ">
+                    <input class="submit" type="submit" value="Tìm">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="ads">
+        <img th:src="@{images/uploads/ads1.png}" alt="" width="336" height="296">
+    </div>
+</div>
+</body>
+</html>

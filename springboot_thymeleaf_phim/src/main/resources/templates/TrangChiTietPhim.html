@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{detail/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Phim chi tiết</title>
+<script>
+        function thucHienThemMoi(value) {
+        //Lấy thông tin trên giao diện
+        var id = $("#id").val();
+        id = parseInt(id);
+        var phim = $("#phim").val();
+        phim = parseInt(phim);
+
+
+        var urlPost = '/api/danhgia/add';
+        var methodType = "POST";
+
+        var diem = $(value).attr("value");
+
+
+        //Khai báo mảng
+        var formData = {}
+        formData["diem"] = diem;
+        formData["phim"] = phim;
+
+
+        $.ajax({
+        url: urlPost,
+        contentType: "application/json; charset=utf-8;",
+        dataType: "json",
+        data: JSON.stringify(formData),
+        type: methodType,
+        success: function (data) {
+        if (data.id != null) {
+        $("#modalDanhGia").modal("hide")
+        //Reload lại trang
+        window.location.reload();
+        } else {
+        $('#tile-body').nextAll(".spanError").remove();
+        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+        }
+        },
+        error: function (error) {
+        alert("Có lỗi xảy ra " + error.name);
+        }
+        });
+        }
+
+
+        function thucHienThemMoiPhimYeuThich() {
+            //Lấy thông tin trên giao diện
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId);
+
+                var urlPost = '/api/phimyeuthich/add';
+                var methodType = "POST";
+
+            var phimId = $("#phimId").val();
+
+            //Khai báo mảng
+            var formData = {}
+            formData["phimId"] = phimId;
+
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.id != null) {
+                        $("#modalPhimYeuThich").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Phim đã được thêm ");
+                }
+            });
+        }
+
+
+</script>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <div class="row">
+        <th:block th:each="p : ${lstPhimChiTiet}">
+            <div class="col-md-4 col-sm-12 col-xs-12">
+                <div class="movie-img sticky-sb">
+                    <img th:src="@{'/image/'+${p.anh}}" alt="">
+                    <div class="movie-btn">
+                        <div class="btn-transform transform-vertical red">
+                            <div><a th:href="@{#}" class="item item-1 redbtn"> <i class="ion-play"></i> Watch Trailer</a></div>
+                            <div><a th:href="@{${p.traiLer}}" class="item item-2 redbtn fancybox-media hvr-grow"><i class="ion-play"></i></a></div>
+                        </div>
+                        <div class="btn-transform transform-vertical blue">
+                            <div><a href="#" class="item item-1 redbtn"> <i class="ion-play"></i>Watch Full</a></div>
+                            <div><a href="#" class="item item-2 redbtn"><i class="ion-play"></i></a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div class="movie-single-ct main-content">
+                    <h1 class="bd-hd">[[${p.tenPhim}]]<span></span></h1>
+                    <div class="social-btn">
+                        <a href="#" class="parent-btn">
+                            <button style="background-color: black; border: none; outline: none" id="phimId" type="submit" onclick="thucHienThemMoiPhimYeuThich()" th:value="${p.id}" ><i class="ion-heart"></i></button> Add to Favorite</a>
+                        <div class="hover-bnt">
+                            <a href="#" class="parent-btn"><i class="ion-android-share-alt"></i>share</a>
+                            <div class="hvr-item">
+                                <a href="#" class="hvr-grow"><i class="ion-social-facebook"></i></a>
+                                <a href="#" class="hvr-grow"><i class="ion-social-twitter"></i></a>
+                                <a href="#" class="hvr-grow"><i class="ion-social-googleplus"></i></a>
+                                <a href="#" class="hvr-grow"><i class="ion-social-youtube"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="movie-rate">
+                        <th:block th:each="dg: ${lstDanhGia}">
+                        <div class="rate">
+
+                                <i class="ion-android-star"></i>
+                                <p><span>[[${dg.diem}]]</span> /10<br>
+                                    <span class="rv">Điểm đánh giá</span>
+                                </p>
+                        </div>
+                        <div class="rate-star">
+                            <p>Đánh giá:  </p>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="1"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="2"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="3"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="4"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="5"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="6"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="7"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="8"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <button class="diem" style="background-color: black; border: none; outline: none;" type="submit" onclick="thucHienThemMoi(this)" value="9"><i class="ion-ios-star" style="font-size: 30px"></i></button>
+                            <input type="hidden" id="phim"  th:value="${p.id}">
+
+                        </div>
+                        </th:block>
+                    </div>
+                    <div class="movie-tabs">
+                        <div class="tabs">
+                            <ul class="tab-links tabs-mv">
+                                <li class="active"><a href="#overview">CHI TIẾT PHIM</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div id="overview" class="tab active">
+                                    <div class="row">
+                                        <div class="col-md-8 col-sm-12 col-xs-12">
+                                            <p>[(${p.noiDung})]</p>
+                                            <div class="title-hd-sm">
+                                                <h4>Ảnh</h4>
+                                                <a href="#" class="time">Tất cả ảnh <i class="ion-ios-arrow-right"></i></a>
+                                            </div>
+                                            <div class="mvsingle-item ov-item slick-multiItemSlider">
+                                                <th:block th:each="a: ${lstAnh}">
+                                                    <a class="img-lightbox"  data-fancybox-group="gallery" th:href="@{'/image/'+${a.tenAnh}}" ><img th:src="@{'/image/'+${a.tenAnh}}" alt="" style="width: 130px; height: 200px"></a>
+                                                </th:block>
+                                            </div>
+                                            <div class="title-hd-sm">
+                                                <h4>Diễn viên</h4>&nbsp;
+                                                <h4> Vai diễn</h4>
+                                            </div>
+                                            <!-- movie cast -->
+                                            <div class="mvcast-item">
+                                                <th:block th:each="pdv: ${lstPhimDienVien}">
+                                                    <div class="cast-it">
+                                                        <div class="cast-left">
+                                                            <a href="#">[[${pdv.hoTen}]]</a>
+                                                        </div>
+                                                        <p>[[${pdv.vaiDien}]]</p>
+                                                    </div>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4 col-xs-12 col-sm-12">
+                                            <div class="sb-it">
+                                                <h6>Đạo diễn: </h6>
+                                                <p><a href="#">[[${p.tenDaoDien}]]</a></p>
+                                            </div>
+                                            <div class="sb-it">
+                                                <h6>Diễn viên: </h6>
+                                                <th:block th:each="pdv: ${lstPhimDienVien}">
+                                                    <p> <a href="#">[[${pdv.hoTen}]]</a><a></a></p>
+                                                </th:block>
+                                            </div>
+                                            <div class="sb-it">
+                                                <h6>Ngày chiếu:</h6>
+                                                <p th:text="${#dates.format(p.ngayChieu, 'dd-MM-yyyy')}">[[${p.ngayChieu}]]</p>
+                                            </div>
+                                            <div class="sb-it">
+                                                <h6>Thời lượng:</h6>
+                                                <p>[[${p.thoiLuong}]]</p>
+                                            </div>
+                                            <div class="sb-it">
+                                                <h6>Plot Keywords:</h6>
+                                                <p class="tags">
+                                                    <span class="time"><a href="#">superhero</a></span>
+                                                    <span class="time"><a href="#">marvel universe</a></span>
+                                                    <span class="time"><a href="#">comic</a></span>
+                                                    <span class="time"><a href="#">blockbuster</a></span>
+                                                    <span class="time"><a href="#">final battle</a></span>
+                                                </p>
+                                            </div>
+                                            <div class="ads">
+                                                <img th:src="@{images/uploads/ads1.png}" alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+    </div>
+</div>
+</body>
+</html>

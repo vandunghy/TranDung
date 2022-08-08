@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="sidebar">
+<div class="sidebar">
+    <div class="ads">
+        <img th:src="@{images/uploads/ads1.png}" alt="" width="336" height="296">
+    </div>
+    <div class="celebrities">
+        <h4 class="sb-title">Người nổi tiếng</h4>
+        <div class="celeb-item">
+            <a href="#"><img th:src="@{images/uploads/ava1.jpg}" alt="" width="70" height="70"></a>
+            <div class="celeb-author">
+                <h6><a href="#">Justin Lin</a></h6>
+                <span>Đạo diễn</span>
+            </div>
+        </div>
+        <a href="#" class="btn">Xem tất cả người nổi tiếng<i class="ion-ios-arrow-right"></i></a>
+    </div>
+</div>
+</div>
+</body>
+</html>

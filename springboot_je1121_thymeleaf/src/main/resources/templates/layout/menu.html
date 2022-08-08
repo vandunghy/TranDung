@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-primary" th:fragment="menu">
+    <a class="navbar-brand" th:href="@{/}">Business Name</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+                <a class="nav-link" th:href="@{/admin/quanly-sach}">Quản lý sách</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/gioi-thieu}"> Giới thiệu</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/dang-nhap}">Đắng nhập</a>
+            </li>
+            <li class="nav-item" th:if="${#session!= null && #session.getAttribute('userOnline') != null}">
+                <a class="nav-link" th:href="@{/dang-xuat}">
+                    Logout: <span  th:utext="${#session.getAttribute('userOnline')}"></span></a>
+                </h6>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

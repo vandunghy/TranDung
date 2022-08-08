@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{home/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ</title>
+</head>
+<body>
+<div layout:fragment="content" id="content">
+    <div class="row" style="margin-top: 20px">
+        <div class="slick-multiItem">
+            <th:block th:each="p : ${lstPhim}">
+                <div class="slide-it" th:if="${p.trangThai}==1">
+                    <div class="movie-item">
+                        <div class="mv-img" style="width: 185px; height: 284px">
+                            <img th:src="@{'/image/'+${p.anh}}" alt="" width="185" height="284">
+                        </div>
+                        <div class="hvr-inner">
+                            <a  th:href="@{'/chitiet-phim/'+${p.id}}"> Xem chi tiết <i class="ion-android-arrow-dropright"></i> </a>
+                        </div>
+                        <div class="title-in">
+                            <h6><a href="#">[[${p.tenPhim}]]</a></h6>
+                            <p><i class="ion-android-star"></i><span>[[${p.diem}]]</span>/10</p>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="header" id="header">
+    <div class="container">
+        <nav class="navbar navbar-default navbar-custom">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header logo">
+                <div class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <div id="nav-icon1">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <a href="index-2.html"><img class="logo" th:src="@{/image/logo.png}" alt="" width="119" height="58"></a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse flex-parent" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav flex-child-menu menu-left">
+                    <li class="hidden">
+                        <a></a>
+                    </li>
+                    <li class="dropdown first">
+                        <a th:href="@{/trang-chu}">
+                            Trang chủ
+                        </a>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                            Phim
+                        </a>
+                        <ul class="dropdown-menu level1">
+                            <li><a th:href="@{/trang-chu/phim-danhsach}">Danh sách phim</a></li>
+                            <li><a th:href="@{/phim-yeuthich}">Phim yêu thích</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                            Thể loại
+                        </a>
+                        <ul class="dropdown-menu level1">
+                            <th:block th:each="p: ${lstTheLoai}">
+                                <li><a th:href="@{/phim-theloai(id=${p.id})}">[[${p.tenTheLoai}]]</a></li>
+                            </th:block>
+                        </ul>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                            Thông tin
+                        </a>
+                        <ul class="dropdown-menu level1">
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" >Diễn viên<i class="ion-ios-arrow-forward"></i></a>
+                                <ul class="dropdown-menu level2">
+                                    <th:block th:each="dv: ${lstDienVien}">
+                                        <li><a th:href="@{/phim-theloai(dienVienId=${dv.id})}">[[${dv.hoTen}]]</a></li>
+                                    </th:block>
+                                </ul>
+                            </li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" >Đạo diễn<i class="ion-ios-arrow-forward"></i></a>
+                                <ul class="dropdown-menu level2">
+                                    <th:block th:each="dd: ${lstDaoDien}">
+                                        <li><a th:href="@{/phim-theloai(daoDienId=${dd.id})}">[[${dd.hoTen}]]</a></li>
+                                    </th:block>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                            Tin tức
+                        </a>
+                        <ul class="dropdown-menu level1">
+                            <li><a href="bloglist.html">Điện ảnh</a></li>
+                            <li><a href="bloggrid.html">Đời sống nghệ sĩ</a></li>
+                            <li class="it-last"><a href="blogdetail.html">Sức khỏe</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav flex-child-menu menu-right">
+                    <li class="dropdown first">
+                        <a class="btn btn-default dropdown-toggle lv1" data-toggle="dropdown" data-hover="dropdown">
+                            Giải trí
+                        </a>
+                        <ul class="dropdown-menu level1">
+                            <li><a href="landing.html">Video</a></li>
+                            <li><a href="404.html">Âm nhạc</a></li>
+                            <li class="it-last"><a href="comingsoon.html">Thời trang</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Trợ giúp</a></li>
+                    <li><a th:href="@{/dang-nhap}">Đăng Nhập</a></li>
+                    <li><a th:href="@{/dang-ky}">Đăng ký</a></li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+        <!-- top search form -->
+        <form  action="#" th:action="@{/trang-chu/timkiem/phim}" th:object="${phimView}" method="POST">
+            <div class="top-search">
+                <input type="text submit" name="tuKhoa" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+

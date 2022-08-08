@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin phim</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.js}"></script>
+    <script type="text/javascript">
+
+        function hienThiThemMoi()
+        {
+            $("#modalTitle").text("Thêm mới thông tin");
+            $("#hUserId").val("");
+            $("#vaiDien").val("");
+            $("#phimId").val("");
+            $("#dienVien").val("");
+            $("#vaiDien").focus();
+        }
+        function themMoiHoacCapNhat() {
+            // alert("Hello");
+            let form = $("#modalPhim").validate({
+                rules: {
+                    vaiDien: "required",
+                },
+                messages: {
+                    vaiDien: "Bạn cần nhập tên vai diễn ",
+                },
+                submitHandler: function () {
+                    if(form.valid()) {
+                        xuLyThemMoi();
+                    }
+                }
+
+            });
+        }
+
+        function xuLyThemMoi() {
+            //Lấy thông tin trên giao diện
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId);
+
+            var urlPost = '/phim-dien-vien/them-moi';
+            var methodType = "POST";
+            //TH sửa
+            if (userId > 0) {
+                urlPost = '/phim-dien-vien/cap-nhat/' + userId;
+                methodType = "PUT";
+            }
+
+            var vaiDien = $("#vaiDien").val();
+            var phimId = $("#phimId").val();
+            var dienVien = $("#dienVien").val();
+
+            //Khai báo mảng
+            var formData = {}
+            formData["vaiDien"] = vaiDien;
+            formData["phimId"] = phimId;
+            formData["dienVien"] = dienVien;
+
+
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.id != null) {
+                        $("#modalPhim").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        /*
+         * Hàm sửa thông tin phim theo id
+         */
+        function suaThongTin(userId) {
+            //Lấy thông tin chi tiết của phim cần sửa
+            thongTinChiTiet(userId);
+        }
+
+        /*
+        * Hàm hiển thị thông tin chi tiết phim bằng jquery ajax
+        */
+        function thongTinChiTiet(userId) {
+            $.ajax({
+                type: "GET",
+                url: "/phim-dien-vien/chi-tiet/" + userId,
+                data: {
+                    id: userId
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data) {
+                    //Hiển thị lên giao diện
+                    $("#modalTitle").text("Sửa thông tin");
+                    $("#hUserId").val(data.id);
+                    $("#vaiDien").val(data.vaiDien);
+                    $("#phimId").val(data.phimId);
+                    $("#dienVien").val(data.dienVien);
+                }});
+        }
+
+        function xoaThongTin(userId) {
+
+            $("#hUserId").val(userId);
+        };
+
+        function thucHienXoa() {
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId)
+            $.ajax({
+                url: '/phim-dien-vien/xoa/' + userId,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<div layout:fragment="content" name="content">
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Tìm kiếm</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div>
+                            <table class="table align-items-center mb-0">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="tile">
+                                            <div class="tile-body">
+                                                <form action="#" th:action="@{/call-api/timkiem/phimdienvien}" th:object="${view}">
+                                                    <fieldset>
+                                                        <div class="row form-group"  style="margin-left: 20px">
+                                                            <label class="col-md-2">
+                                                                Từ khóa:
+                                                            </label>
+                                                            <div class="col-md-3">
+                                                                <input type="text" autocomplete="off"  name="tuKhoa" th:class="form-control"/>
+                                                            </div>
+                                                            <div class="col-md-2" style="text-align: right">
+                                                                <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row form-group"  style="margin-left: 20px">
+                                                            <label class="col-md-2">
+                                                                Phim:
+                                                            </label>
+                                                            <div class="col-md-3">
+                                                                <select name="phimId" th:class="form-control">
+                                                                    <option value="">---Chọn phim---</option>
+                                                                    <th:block th:each="cd : ${lstPhim}">
+                                                                        <option th:value="${cd.id}">[[${cd.tenPhim}]]</option>
+                                                                    </th:block>
+                                                                </select>
+                                                            </div>
+                                                            <label class="col-md-2">
+                                                                Diễn viên:
+                                                            </label>
+                                                            <div class="col-md-2">
+                                                                <select name="dienVien" th:class="form-control">
+                                                                    <option value="">---Chọn diễn viên---</option>
+                                                                    <th:block th:each="cd : ${lstDienVien}">
+                                                                        <option th:value="${cd.id}">[[${cd.hoTen}]]</option>
+                                                                    </th:block>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </fieldset>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card my-4">
+                    <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                        <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
+                            <h6 class="text-white text-capitalize ps-3">Danh sách phim diễn viên</h6>
+                        </div>
+                    </div>
+                    <div class="card-body px-0 pb-2">
+                        <div style="text-align: right">
+                            <a href="#" onclick="hienThiThemMoi()"
+                               class="btn btn-success" data-toggle="modal" data-target="#modalPhim">Thêm mới</a>
+                        </div>
+                        <div class="table-responsive p-0">
+                            <table class="table align-items-center mb-0">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Vai diễn</th>
+                                    <th>Phim</th>
+                                    <th>Diễn viên</th>
+                                    <th>Xử lý</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="s : ${lstPhimDienVien}">
+<!--                                    <td>-->
+<!--                                        <img width="100" height="100" th:src="@{'/image/' + ${s.anh}}"/>-->
+<!--                                    </td>-->
+                                    <td>[[${s.id}]]</td>
+                                    <td>[[${s.vaiDien}]]</td>
+                                    <td>[[${s.tenPhim}]]</td>
+                                    <td>[[${s.tenDienVien}]]</td>
+                                    <td>
+                                        <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#modalPhim" href='#' th:attr="onclick=|suaThongTin(${s.id})|" onclick= "suaThongTin(${s.id})" title='Sửa'>
+                                            <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                                        &nbsp;
+                                        <a class="btn btn-xs btn-danger" href='#' data-toggle="modal" data-target="#modalXoa" title='Xóa' th:attr="onclick=|xoaThongTin(${s.id})|">
+                                            <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Thiết kế giao diện nhân viên dạng modal-->
+    <form id="modalPhim" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        Thêm mới phim diễn viên</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                vai diễn:
+                            </label>
+                            <div class="col-md-10">
+                                <input type="text" id="vaiDien" name="vaiDien" autocomplete="off" class="form-control"
+                                       placeholder="Nhập tên vai diễn trong phim"/>
+                                <input type="hidden" id="hUserId" name="hUserId">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Diễn viên:
+                            </label>
+                            <div class="col-md-10">
+                                <select id="dienVien" name="dienVien" class="form-control">
+                                    <option value="">---Chọn diễn viên---</option>
+                                    <th:block th:each="dv : ${lstDienVien}">
+                                        <option th:value="${dv.id}">[[${dv.hoTen}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Phim:
+                            </label>
+                            <div class="col-md-10">
+                                <select id="phimId" name="phimId" class="form-control">
+                                    <option value="">---Chọn Phim---</option>
+                                    <th:block th:each="qg : ${lstPhim}">
+                                        <option th:value="${qg.id}">[[${qg.tenPhim}]]</option>
+                                    </th:block>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="themMoiHoacCapNhat()" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Form modal hỏi xoá-->
+    <fieldset id="modalXoa"  class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Thông báo xoá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="title-delete">
+
+                        <h3>Bạn có chắc chắn muốn xoá thông tin này không ?  </h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="thucHienXoa()" class="btn btn-primary">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+</body>
+</html>

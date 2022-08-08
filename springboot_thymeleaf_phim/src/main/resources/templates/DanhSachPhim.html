@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en"xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{home/movielist}">
+<head>
+    <meta charset="UTF-8">
+    <title>Danh sách phim</title>
+</head>
+<body>
+    <div layout:fragment="content" name="content">
+        <div class="flex-wrap-movielist">
+            <th:block th:each="dsp: ${lstPhim}">
+                <div class="movie-item-style-2 movie-item-style-1" th:if="${dsp.trangThai}==1">
+                    <img th:src="@{'/image/'+${dsp.anh}}"  alt="" style="width: 185px; height: 284px">
+                    <div class="hvr-inner">
+                        <a  th:href="@{'/chitiet-phim/'+${dsp.id}}"> Xem chi tiết <i class="ion-android-arrow-dropright"></i> </a>
+                    </div>
+                    <div class="mv-item-infor">
+                        <h6><a href="#">[[${dsp.tenPhim}]]</a></h6>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+        <div class="topbar-filter">
+            <label>Trang: [[${currentPage}]] / [[${totalPages}]]</label>
+            <div class="pagination2">
+                <a th:if="${currentPage > 1}" th:href="@{'/trang-chu/page/' + ${currentPage - 1}}">
+                    <span aria-hidden="true" style="font-size: 20px">&laquo;</span>
+                </a>
+                <span th:unless="${currentPage > 1}"></span>
+                <th:block th:each="i : ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${i != currentPage}" th:href="@{'/trang-chu/page/' + ${i}}" >[[${i}]]</a>
+                    <span th:unless="${i != currentPage}">[[${i}]]</span>
+                </th:block>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/trang-chu/page/' + ${currentPage + 1}}">
+                    <span aria-hidden="true" style="font-size: 20px">&raquo;</span>
+                </a>
+                <span th:unless="${currentPage < totalPages}" aria-hidden="true" style="font-size: 20px">&raquo;</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

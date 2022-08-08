@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới hoặc sửa thông tin sách</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+</head>
+<body layout:fragment="content">
+<form action="#" method="post" th:action="@{/admin/themMoiSach}" th:object="${sach}" enctype="multipart/form-data">
+    <fieldset>
+        <legend>Nhập thông tin sách</legend>
+        <table>
+            <tr>
+                <td>
+                    Mã sách:
+                </td>
+                <td>
+                    <input type="text" th:field="*{maSach}"/>
+                    <input type="hidden" name="userId" th:value="${sach.maSach}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tên sách:
+                </td>
+                <td>
+                    <input type="text" th:field="*{tenSach}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Mô tả:
+                </td>
+                <td>
+                    <input type="text" th:field="*{moTa}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Ảnh sách:
+                </td>
+                <td>
+                    <input type="file" name="fUpload"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Tác giả:
+                </td>
+                <td>
+                    <input type="text" th:field="*{tacGia}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Giá sách:
+                </td>
+                <td>
+                    <input type="text" th:field="*{giaSach}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    Chủ đề:
+                </td>
+                <td>
+                    <select th:field="*{maChuDe}">
+                        <th:block th:each="cd : ${lstChuDe}">
+                            <option th:value="${cd.maChuDe}">[[${cd.tenChuDe}]]</option>
+                        </th:block>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
+                </td>
+                <td>
+                    <input type="submit" name="btnCapNhat" value="Cập nhật"/>
+                    &nbsp;
+                    <a th:href="@{/admin/quanly-sach}">Trở về</a>
+                </td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+</body>
+</html>

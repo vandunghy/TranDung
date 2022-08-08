@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý thông tin Chức năng - API</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}"/>
+    <script type="text/javascript" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery.validate.js}"></script>
+    <script type="text/javascript">
+
+        function hienThiThemMoi()
+        {
+            $("#modalTitle").text("Thêm mới thông tin người dùng");
+            $("#hUserId").val("");
+            $("#tenChucNang").val("");
+            $("#moTa").val("");
+            $("#tenFrom").val("");
+            $("#module").val("");
+            $("#oderNumber").val("");
+            $("#tenChucNang").focus();
+        }
+        function themMoiHoacCapNhat() {
+            //alert("Hello");
+            let form = $("#modalChucNang").validate({
+                rules: {
+                    tenChucNang: "required",
+                    moTa: "required",
+                    tenFrom: "required",
+                },
+                messages: {
+                    tenChucNang: "Bạn cần phải nhập người dùng id",
+                    moTa: "Bạn cần phải nhập họ tên",
+                    tenFrom: "Bạn cần phải nhập phim id",
+                },
+                submitHandler: function () {
+                    if(form.valid()) {
+                        xuLyThemMoi();
+                    }
+                }
+
+            });
+        }
+
+        function xuLyThemMoi() {
+            //Lấy thông tin trên giao diện
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId);
+
+            var urlPost = '/api/chucnang/add';
+            var methodType = "POST";
+            //TH sửa
+            if (userId > 0) {
+                urlPost = '/api/chucnang/' + userId;
+                methodType = "PUT";
+            }
+
+            var tenChucNang = $("#tenChucNang").val();
+            var moTa = $("#moTa").val();
+            var tenFrom = $("#tenFrom").val();
+            var module = $("#module").val();
+            var oderNumber = $("#oderNumber").val();
+
+
+            //Khai báo mảng
+            var formData = {}
+            formData["tenChucNang"] = tenChucNang;
+            formData["moTa"] = moTa;
+            formData["tenFrom"] = tenFrom;
+            formData["module"] = module;
+            formData["oderNumber"] = oderNumber;
+
+            // console.log("Tên đăng nhập: " + tenDN);
+            // console.log("Mật khẩu: " + matKhau);
+            // console.log("Họ tên: " + ten);
+            // console.log("Điện thoại: " + dt);
+            // console.log("Email: " + email);
+            // console.log("Địa chỉ: " + diaChi);
+
+            $.ajax({
+                url: urlPost,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                data: JSON.stringify(formData),
+                type: methodType,
+                success: function (data) {
+                    if (data.id != null) {
+                        $("#modalChucNang").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#tile-body').nextAll(".spanError").remove();
+                        $('#tile-body').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+        /*
+         * Hàm sửa thông tin người dùng theo id
+         */
+        function suaThongTin(userId) {
+            //Lấy thông tin chi tiết của người dùng cần sửa
+            thongTinChiTiet(userId);
+        }
+
+        /*
+        * Hàm hiển thị thông tin chi tiết người dùng bằng jquery ajax
+        */
+        function thongTinChiTiet(userId) {
+            $.ajax({
+                type: "GET",
+                url: "/api/chucnang/" + userId,
+                data: {
+                    id: userId
+                },
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                async: true,
+                success: function (data) {
+                    //Hiển thị lên giao diện
+                    $("#modalTitle").text("Sửa thông tin người dùng");
+                    $("#hUserId").val(data.id);
+                    $("#tenChucNang").val(data.tenChucNang);
+                    $("#moTa").val(data.moTa);
+                    $("#tenFrom").val(data.tenFrom);
+                    $("#module").val(data.module);
+                    $("#oderNumber").val(data.oderNumber);
+
+                }});
+        }
+
+        function xoaThongTin(userId) {
+
+            $("#hUserId").val(userId);
+        };
+
+        function thucHienXoa() {
+            var userId = $("#hUserId").val();
+            userId = parseInt(userId)
+            $.ajax({
+                url: '/api/chucnang/' + userId,
+                contentType: "application/json; charset=utf-8;",
+                dataType: "json",
+                type: "DELETE",
+                success: function (data) {
+                    if (data.name != null) {
+                        $("#modalXoa").modal("hide")
+                        //Reload lại trang
+                        window.location.reload();
+                    } else {
+                        $('#title-delete').nextAll(".spanError").remove();
+                        $('#title-delete').after('<div class="alert alert-dismissible alert-danger spanError">' + data.name + '</div>')
+
+                    }
+                },
+                error: function (error) {
+                    alert("Có lỗi xảy ra " + error.name);
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+<div layout:fragment="content" name="content">
+    <div style="text-align: center; width: 100%">
+        <h2>Danh sách Chức năng</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="tile">
+                <div class="tile-body">
+                    <form action="#" th:action="@{/call-api/timkiem/chucnang}" th:object="${view}">
+                        <fieldset>
+                            <legend>Nhập thông tin tìm kiếm</legend>
+                            <div class="row form-group">
+                                <label class="col-md-2">
+                                    Từ khóa:
+                                </label>
+                                <div class="col-md-10">
+                                    <input type="text" name="tuKhoa" th:class="form-control"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"/>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="width: 100%; text-align: right;">
+        <a href="#" onclick="hienThiThemMoi()" class="btn btn-success" data-toggle="modal" data-target="#modalChucNang">Thêm mới</a>
+    </div>
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Tên chức năng</th>
+            <th>Mô tả</th>
+            <th>Tên From</th>
+            <th>Module</th>
+            <th>OderNumber</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="s : ${lstChucNang}">
+
+            <td>[[${s.id}]]</td>
+            <td>[[${s.tenChucNang}]]</td>
+            <td>[[${s.moTa}]]</td>
+            <td>[[${s.tenFrom}]]</td>
+            <td>[[${s.module}]]</td>
+            <td>[[${s.oderNumber}]]</td>
+            <td>
+                <a class="btn btn-xs btn-info" data-toggle="modal" data-target="#modalPhim" href='#' th:attr="onclick=|suaThongTin(${s.id})|" onclick= "suaThongTin(${s.id})" title='Sửa'>
+                    <i class="ace-icon fa fa-pencil bigger-120"></i></a>
+                &nbsp;
+                <a class="btn btn-xs btn-danger" href='#' data-toggle="modal" data-target="#modalXoa" title='Xóa' th:attr="onclick=|xoaThongTin(${s.id})|">
+                    <i class="ace-icon fa fa-trash-o bigger-120"></i>
+                </a>
+            </td>
+        </tbody>
+    </table>
+    <!--Thiết kế giao diện nhân viên dạng modal-->
+    <form id="modalChucNang" method="post" class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle">
+                        Thêm mới Đánh giá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="tile-body">
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Tên chức năng:
+                            </label>
+                            <div class="col-md-9">
+                                <input type="text" id="tenChucNang" name="tenChucNang" class="form-control"
+                                       placeholder="Nhập tên chức năng"/>
+                                <input type="hidden" id="hUserId" name="hUserId">
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Mô tả:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="moTa" name="moTa" type="text" class="form-control"
+                                       placeholder="Nhập mô tả"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Tên from:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="tenFrom" name="tenFrom" type="text" class="form-control"
+                                       placeholder="Nhập tên from"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                Module:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="module" name="module" type="text" class="form-control"
+                                       placeholder="Nhập Modelu"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3">
+                                OderNumber:
+                            </label>
+                            <div class="col-md-9">
+                                <input id="oderNumber" name="oderNumber" type="text" class="form-control"
+                                       placeholder="Nhập OderNumber"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="themMoiHoacCapNhat()" class="btn btn-primary">Cập nhật</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!--Form modal hỏi xoá người dùng-->
+    <fieldset id="modalXoa"  class="modal fade">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Thông báo xoá</h5>
+                    <button type="button" class="close" data-dismiss="modal"  aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="tile-body" id="title-delete">
+
+                        <h3>Bạn có chắc chắn muốn xoá thông tin này không ?  </h3>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" onclick="thucHienXoa()" class="btn btn-primary">Đồng ý</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+</div>
+</body>
+</html>
